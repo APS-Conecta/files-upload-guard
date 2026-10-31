@@ -34,13 +34,15 @@ $storage = new class($ordinaryDirectory, $stage) extends Wrapper {
     public array $directories;
     public array $existing;
     public function __construct(string $ordinaryDirectory, string $stage) {
-        $this->directories = ['', 'files', $ordinaryDirectory, 'nested/' . $stage];
+        $this->directories = ['', 'files', $ordinaryDirectory, 'nested/' . $stage, 'locked/' . $stage];
         $this->existing = [...$this->directories, 'files/previous.txt', 'occupied/' . $stage];
     }
     public function getId(): string { return 'upload-fixture'; }
     public function file_exists(string $path): bool { return in_array($path, $this->existing, true); }
     public function is_dir(string $path): bool { return in_array($path, $this->directories, true); }
-    public function isCreatable(string $path): bool { return $this->is_dir($path); }
+    public function isCreatable(string $path): bool {
+        return $this->is_dir($path) && !str_starts_with($path, 'locked/');
+    }
     public function isUpdatable(string $path): bool { return $path === 'files/previous.txt'; }
 };
 $guard = new StagingGuard($storage, $l10n);
@@ -72,6 +74,7 @@ check('denied parent refuses direct-write fallback', fn () => refuses(fn () => $
 check('occupied staging refuses replacement', fn () => refuses(fn () => $guard->isCreatable('occupied/' . $stage)));
 check('ordinary directories retain CREATE', fn () => $guard->isCreatable($ordinaryDirectory));
 check('existing directories matching the complete convention retain CREATE', fn () => $guard->isCreatable('nested/' . $stage));
+check('non-creatable staging directories refuse direct-write fallback', fn () => refuses(fn () => $guard->isCreatable('locked/' . $stage)));
 check('ordinary file probes stay non-creatable', fn () => $guard->isCreatable('files/new.txt') === false);
 check('directory probes delegate', fn () => $guard->isCreatable('files'));
 check('target UPDATE permission remains denied', fn () => $guard->isUpdatable('denied.txt') === false);
