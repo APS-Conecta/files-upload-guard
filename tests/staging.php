@@ -78,5 +78,5 @@ check('target UPDATE permission remains denied', fn () => $guard->isUpdatable('d
 check('target UPDATE permission remains allowed', fn () => $guard->isUpdatable('files/previous.txt'));
 check('native storage traversal retains its identity', fn () => $guard->getWrapperStorage() === $storage);
 check('native locking and stream capabilities remain present', fn () => $guard instanceof ILockingStorage && $guard instanceof IWriteStreamStorage);
-printf('staging checks: %d, failed: %d\n', $checks, $failed);
+printf("staging checks: %d, failed: %d\n", $checks, $failed);
 exit($failed === 0 ? 0 : 1);

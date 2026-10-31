@@ -20,7 +20,8 @@ final class StagingGuard extends Wrapper {
     }
 
     public function isCreatable(string $path): bool {
-        if (!preg_match('/\.ocTransferId[0-9]+\.part\z/', $path)) {
+        if (!preg_match('~(?:^|/)[a-f0-9]{32}\.ocTransferId[0-9]+\.part\z~', $path)
+            || $this->storage->is_dir($path)) {
             return parent::isCreatable($path);
         }
 
