@@ -33,6 +33,14 @@ final class FilesystemSetupListener implements IEventListener {
             return;
         }
 
+        // Chunk PUTs use another view; reject dot segments so the exemption cannot reach files.
+        $path = (string)$this->request->getPathInfo();
+        if ($this->request->getMethod() === 'PUT'
+            && preg_match('~\A/dav/uploads/[^/]+/[^/]+/[^/]+/?\z~', $path) === 1
+            && preg_match('~(?:\A|/)\.{1,2}(?:/|\z)~', $path) !== 1) {
+            return;
+        }
+
         $this->factory->addStorageWrapper(
             'aps_upload_staging',
             fn (string $mountPoint, IStorage $storage): IStorage => new StagingGuard($storage, $this->l10n),
