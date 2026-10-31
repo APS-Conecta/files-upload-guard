@@ -1,0 +1,21 @@
+# SPDX-FileCopyrightText: 2026 APS Conecta
+# SPDX-License-Identifier: AGPL-3.0-or-later
+name: Release
+on:
+  pull_request:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+jobs:
+  release:
+    uses: APS-Conecta/.github/.github/workflows/app-release.yml@b2d2739bd093733fb5eea5a311a5beda9e3ff8a7
+    permissions:
+      contents: write
+    with:
+      app-id: files_upload_guard
+      php-only: true
+      build: find lib -name '*.php' -print0 | xargs -0 -n 1 php -l
+    secrets:
+      APP_SIGNING_KEY: ${{ secrets.APP_SIGNING_KEY }}
+      APP_SIGNING_KEY_PASSWORD: ${{ secrets.APP_SIGNING_KEY_PASSWORD }}
