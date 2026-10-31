@@ -1,0 +1,25 @@
+# SPDX-FileCopyrightText: 2026 APS Conecta
+# SPDX-License-Identifier: AGPL-3.0-or-later
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  staging:
+    name: Native storage contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check against the verified Nextcloud 34.0.5 image
+        run: |
+          docker run --rm --network none --read-only --tmpfs /tmp --entrypoint bash \
+            --env NEXTCLOUD_ROOT=/usr/src/nextcloud --volume "$PWD:/app:ro" --workdir /app \
+            ghcr.io/aps-conecta/aio-nextcloud@sha256:3101952d03709e7210cf4136d978b40e89a09018f210b9abd5056db016574c97 \
+            -euo pipefail -c 'find lib tests -name "*.php" -print0 | xargs -0 -n 1 php -l; php tests/staging.php'
