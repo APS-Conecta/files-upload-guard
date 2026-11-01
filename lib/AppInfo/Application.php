@@ -9,7 +9,9 @@ declare(strict_types=1);
 
 namespace OCA\FilesUploadGuard\AppInfo;
 
+use OCA\DAV\Events\SabrePluginAddEvent;
 use OCA\FilesUploadGuard\Listener\FilesystemSetupListener;
+use OCA\FilesUploadGuard\Listener\MountParentListener;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -23,6 +25,7 @@ final class Application extends App implements IBootstrap {
 
     public function register(IRegistrationContext $context): void {
         $context->registerEventListener(BeforeFileSystemSetupEvent::class, FilesystemSetupListener::class);
+        $context->registerEventListener(SabrePluginAddEvent::class, MountParentListener::class);
     }
 
     public function boot(IBootContext $context): void {

@@ -3,9 +3,9 @@
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
     <id>files_upload_guard</id>
     <name>Protección de cargas</name>
-    <summary>Conserva los archivos anteriores cuando una carga es rechazada.</summary>
-    <description>Prepara las cargas en un archivo temporal antes de sustituir el archivo existente.</description>
-    <version>0.1.1</version>
+    <summary>Conserva archivos y permite cargar en carpetas de equipo.</summary>
+    <description>Conserva el archivo anterior cuando se rechaza una carga y permite cargar en carpetas de equipo desde el primer acceso.</description>
+    <version>0.1.2</version>
     <licence>AGPL-3.0-or-later</licence>
     <author>APS Conecta</author>
     <namespace>FilesUploadGuard</namespace>
