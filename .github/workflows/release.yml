@@ -9,7 +9,7 @@ permissions:
   contents: read
 jobs:
   release:
-    uses: APS-Conecta/.github/.github/workflows/app-release.yml@b2d2739bd093733fb5eea5a311a5beda9e3ff8a7
+    uses: APS-Conecta/.github/.github/workflows/app-release.yml@064711df8c14749c1de0be7f4975cf737103eed9 # 2026-11-10
     permissions:
       contents: write
     with:
